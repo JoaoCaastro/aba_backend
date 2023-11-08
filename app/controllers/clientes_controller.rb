@@ -6,20 +6,48 @@ class ClientesController < ApplicationController
     render json: @clientes
   end
   
-  def create
-    @cliente = Cliente.new(cliente_params)
+  # def create
+  #   @cliente = Cliente.new(cliente_params)
 
-    if @cliente.save
-      render json: @cliente, status: :created      
-    else
-      render json: @cliente.errors, status: :unprocessable_entity
-    end        
+  #   if @cliente.save
+  #     render json: @cliente, status: :created      
+  #   else
+  #     render json: @cliente.errors, status: :unprocessable_entity
+  #   end        
+  # end
+
+  def create
+    ActiveRecord::Base.transaction do
+      # Crie o cliente
+      @cliente = Cliente.new(cliente_params)
+      @cliente.save!
+
+      # Crie o responsável e associe ao cliente
+      parent_guardian_params = params[:parent_guardian]
+      @parent_guardian = ParentGuardian.new(parent_guardian_params)
+      @parent_guardian.save!
+      @cliente.parent_guardians << @parent_guardian
+
+      render json: { cliente: @cliente, parent_guardian: @parent_guardian }, status: :created
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
   end
+
+  # def show
+  #   @cliente = Cliente.find_by(id: params[:id])
+  #   if @cliente
+  #     render json: @cliente
+  #   else
+  #     render json: { error: 'Cliente não encontrado' }, status: :not_found
+  #   end
+  # end
 
   def show
     @cliente = Cliente.find_by(id: params[:id])
+
     if @cliente
-      render json: @cliente
+      render json: { cliente: @cliente, parent_guardians: @cliente.parent_guardians }
     else
       render json: { error: 'Cliente não encontrado' }, status: :not_found
     end
