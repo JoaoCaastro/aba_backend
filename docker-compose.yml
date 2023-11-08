@@ -2,6 +2,9 @@ version: '3.8'
 services:
   db:
     image: postgres
+    container_name: postgres_rails
+    volumes:
+      - postgres_rails:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: daniel
       POSTGRES_PASSWORD: mudar123
@@ -16,3 +19,5 @@ services:
       - "3000:3000"
     depends_on:
       - db
+volumes:
+  postgres_rails:

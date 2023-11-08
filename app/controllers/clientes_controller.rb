@@ -12,7 +12,7 @@ class ClientesController < ApplicationController
   #   if @cliente.save
   #     render json: @cliente, status: :created      
   #   else
-  #     render json: @cliente.errors, status: :unprocessable_entity
+  #     render json: { error: @cliente.errors.full_menssages }, status: :unprocessable_entity
   #   end        
   # end
 
@@ -20,15 +20,14 @@ class ClientesController < ApplicationController
     ActiveRecord::Base.transaction do
       # Crie o cliente
       @cliente = Cliente.new(cliente_params)
-      @cliente.save!
-
+  
       # Crie o responsável e associe ao cliente
-      parent_guardian_params = params[:parent_guardian]
-      @parent_guardian = ParentGuardian.new(parent_guardian_params)
-      @parent_guardian.save!
-      @cliente.parent_guardians << @parent_guardian
-
-      render json: { cliente: @cliente, parent_guardian: @parent_guardian }, status: :created
+      parent_guardian_params = cliente_params.delete(:parent_guardians_attributes)
+      @cliente.parent_guardians.build(parent_guardian_params)
+  
+      @cliente.save!
+  
+      render json: { cliente: @cliente, parent_guardian: @cliente.parent_guardians }, status: :created
     rescue ActiveRecord::RecordInvalid => e
       render json: { error: e.message }, status: :unprocessable_entity
     end
@@ -82,7 +81,7 @@ class ClientesController < ApplicationController
   private
 
   def cliente_params
-    params.require(:cliente).permit(:name, :brithday, :gender, :cpf, :telephone, :email, :education_level, :medical_informations, :medicines_in_use, :processing_information)
+    params.require(:cliente).permit(:name, :brithday, :gender, :cpf, :telephone, :email, :education_level, :medical_informations, :medicines_in_use, :processing_information, parent_guardians_attributes: [:parent_name, :cpf, :degree_of_kinship, :email, :telephone])
   end
   
 
