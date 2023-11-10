@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_08_013142) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_08_004855) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "clientes", force: :cascade do |t|
+  create_table "clients", force: :cascade do |t|
     t.string "name"
     t.date "brithday"
     t.string "gender"
@@ -29,25 +29,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_013142) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "clientes_parent_guardians", force: :cascade do |t|
-    t.bigint "cliente_id"
-    t.bigint "parent_guardian_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cliente_id"], name: "index_clientes_parent_guardians_on_cliente_id"
-    t.index ["parent_guardian_id"], name: "index_clientes_parent_guardians_on_parent_guardian_id"
-  end
-
-  create_table "parent_guardians", force: :cascade do |t|
+  create_table "parents", force: :cascade do |t|
     t.string "parent_name"
     t.string "cpf"
     t.string "degree_of_kinship"
     t.string "email"
     t.string "telephone"
+    t.bigint "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_parents_on_client_id"
   end
 
-  add_foreign_key "clientes_parent_guardians", "clientes"
-  add_foreign_key "clientes_parent_guardians", "parent_guardians"
+  add_foreign_key "parents", "clients"
 end
