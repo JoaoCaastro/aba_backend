@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   db:
-    image: postgres
+    image: postgres:latest
     container_name: postgres_rails
     volumes:
       - postgres_rails:/var/lib/postgresql/data
@@ -10,6 +10,8 @@ services:
       POSTGRES_PASSWORD: mudar123
     ports:
       - "5432:5432"
+    expose:
+      - "5432"
     networks:
       - rails_network
   web:
@@ -19,6 +21,8 @@ services:
       - .:/aba-project-rails-api
     ports:
       - "3000:3000"
+    expose:
+      - "3000"
     depends_on:
       - db
     networks:
