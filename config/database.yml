@@ -24,6 +24,7 @@ default: &default
 development:
   <<: *default
   host: db
+  port: 5432
   username: daniel
   password: mudar123
 
@@ -60,6 +61,7 @@ development:
 test:
   <<: *default
   host: db
+  port: 5432
   username: daniel
   password: mudar123
 
@@ -86,5 +88,6 @@ test:
 production:
   <<: *default
   host: db
+  port: 5432
   username: daniel
   password: mudar123

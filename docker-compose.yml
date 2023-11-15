@@ -12,12 +12,16 @@ services:
       - "5432:5432"
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && rails s -b '0.0.0.0'"
+    command: bash -c "wait-for-it db:5432 -- rails s -b '0.0.0.0'"
     volumes:
       - .:/aba-project-rails-api
     ports:
       - "3000:3000"
     depends_on:
       - db
+    networks:
+      - rails_network
 volumes:
   postgres_rails:
+networks:
+  rails_network:
