@@ -83,4 +83,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Permitir todos os hosts para o ambiente de produção
+  config.hosts.clear
 end
