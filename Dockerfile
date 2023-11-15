@@ -15,5 +15,8 @@ RUN bundle install
 # Copiar o restante do código para o contêiner
 COPY . .
 
+# Expor a porta 3000
+EXPOSE 3000
+
 # Iniciar o servidor
 CMD ["rails", "server", "-b", "0.0.0.0"]
