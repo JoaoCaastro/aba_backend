@@ -1,5 +1,7 @@
 class Client < ApplicationRecord
+
+  has_many :parents
   
-  validates :name, presence: true
-  validates :cpf, presence: true, uniqueness: true
+  accepts_nested_attributes_for :parents, allow_destroy: true
+  
 end

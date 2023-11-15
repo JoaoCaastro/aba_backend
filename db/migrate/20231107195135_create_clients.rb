@@ -11,6 +11,14 @@ class CreateClients < ActiveRecord::Migration[7.0]
       t.text :medical_informations
       t.text :medicines_in_use
       t.text :processing_information
+      t.string :cep
+      t.string :street 
+      t.string :number 
+      t.string :neighborhood
+      t.string :city
+      t.string :state 
+      t.string :complement
+
 
       t.timestamps
     end

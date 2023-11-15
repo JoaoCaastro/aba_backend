@@ -25,6 +25,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_004855) do
     t.text "medical_informations"
     t.text "medicines_in_use"
     t.text "processing_information"
+    t.string "cep"
+    t.string "street"
+    t.string "number"
+    t.string "neighborhood"
+    t.string "city"
+    t.string "state"
+    t.string "complement"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

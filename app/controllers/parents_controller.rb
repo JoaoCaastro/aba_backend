@@ -1,61 +1,75 @@
 class ParentsController < ApplicationController
+   # GET /parents
+   def index
+    @client = Client.find(params[:client_id])
+    @parents = @client.parents
 
-  def index
-    @parents = Parent.all
-    
     render json: @parents
   end
-  
-  def create
-    @parent = Parent.new(parent_params)
 
-    if @parent.save
-      render json: @parent, status: :created      
-    else
-      render json: @parent.errors, status: :unprocessable_entity
-    end        
-  end
-
+  # GET /parents/1
   def show
-    @parent = Parent.find_by(id: params[:id])
-    if @parent
+    @client = Client.find(params[:client_id])
+    @parent = @client.parents.find_by(id: params[:id])
+  
+    if @parent.present?
       render json: @parent
     else
-      render json: { error: 'Responsável não encontrado' }, status: :not_found
+      render json: { error: 'Responsaveis não encontrado' }, status: :not_found
     end
   end
 
-  def update
-    @parent = Parent.find_by(id: params[:id])
+  # POST /parents
+  def create
+    @client = Client.find(params[:client_id])
+    puts("Client", parent_params)
+    puts("Params", parent_params)
 
-    if @parent
+    @parent = @client.parents.build(parent_params)
+    puts("Parentes", @parent.inspect)
+  
+    if @parent.save
+      render json: @parent, status: :created
+    else
+      render json: @parent.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /parents/1
+  def update
+    @client = Client.find(params[:client_id])
+    @parent = @client.parents.find_by(id: params[:id])
+  
+    if @parent.present?
       if @parent.update(parent_params)
         render json: @parent
       else
         render json: @parent.errors, status: :unprocessable_entity
       end
     else
-      render json: { error: 'Responsável não encontrado' }, status: :not_found
+      render json: { error: 'Responsável não encontrado ou não está associado ao cliente' }, status: :not_found
     end
   end
 
+  # DELETE /parents/1
   def destroy
-    @parent = Parent.find_by(id: params[:id])
-
-    if @parent
-      @parent.destroy
-      render json: { message: 'Responsável removido com sucesso' }
+    @client = Client.find(params[:client_id])
+    @parent = @client.parents.find_by(id: params[:id])
+    
+    if @parent.present?
+      if @parent.destroy
+        render json: { message: 'Responsável excluído com sucesso' }
+      else
+        render json: @parent.errors, status: :unprocessable_entity
+      end
     else
-      render json: { error: 'Responsável não encontrado' }, status: :not_found
+      render json: { error: 'Responsável não encontrado ou não está associado ao cliente' }, status: :not_found
     end
   end
-  
-  
+
   private
-
-  def parent_params
-    params.require(:parent).permit(:parent_name, :cpf, :telephone, :email, :degree_of_kinship)
-  end
-  
-
+    # Only allow a list of trusted parameters through.
+    def parent_params
+      params.require(:parent).permit(:parent_name, :cpf, :client_id, :degree_of_kinship, :email, :telephone)
+    end
 end
