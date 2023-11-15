@@ -10,9 +10,11 @@ services:
       POSTGRES_PASSWORD: mudar123
     ports:
       - "5432:5432"
+    networks:
+      - rails_network
   web:
     build: .
-    command: bash -c "wait-for-it db:5432 -- rails s -b '0.0.0.0'"
+    command: bash -c "rails db:migrate && rails s -b '0.0.0.0'"
     volumes:
       - .:/aba-project-rails-api
     ports:
