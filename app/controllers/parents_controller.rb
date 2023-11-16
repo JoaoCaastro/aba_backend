@@ -22,11 +22,7 @@ class ParentsController < ApplicationController
   # POST /parents
   def create
     @client = Client.find(params[:client_id])
-    puts("Client", parent_params)
-    puts("Params", parent_params)
-
     @parent = @client.parents.build(parent_params)
-    puts("Parentes", @parent.inspect)
   
     if @parent.save
       render json: @parent, status: :created
