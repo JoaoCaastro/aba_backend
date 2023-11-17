@@ -5,16 +5,16 @@ FROM ruby:3.2.2
 WORKDIR /aba-project-rails-api
 
 # Instalar dependências do sistema
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn
+RUN apt-get update -qq && \ 
+    apt-get install -y build-essential libvips bash bash-completion libffi-dev tzdata postgresql nodejs npm yarn && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
 
 # Instalar gems
 COPY Gemfile /aba-project-rails-api/Gemfile
 COPY Gemfile.lock /aba-project-rails-api/Gemfile.lock
 RUN gem install bundler:2.2.26
 RUN bundle install
-
-# Instalar wait-for-it
-RUN apt-get install -y wait-for-it
 
 # Copiar o restante do código para o contêiner
 COPY . /aba-project-rails-api

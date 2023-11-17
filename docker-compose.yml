@@ -6,6 +6,7 @@ services:
     volumes:
       - postgres_rails:/var/lib/postgresql/data
     environment:
+      POSTGRES_DB: aba
       POSTGRES_USER: daniel
       POSTGRES_PASSWORD: mudar123
     ports:
@@ -17,6 +18,12 @@ services:
   web:
     build: .
     command: bash -c "rails db:migrate && rails s -b '0.0.0.0'"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: aba
+      POSTGRES_USER: daniel
+      POSTGRES_PASSWORD: mudar123
+
     volumes:
       - .:/aba-project-rails-api
     ports:

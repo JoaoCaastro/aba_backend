@@ -20,11 +20,11 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
+  host: db
+  port: 5432
 
 development:
   <<: *default
-  host: db
-  port: 5432
   username: daniel
   password: mudar123
 
@@ -60,8 +60,6 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  host: db
-  port: 5432
   username: daniel
   password: mudar123
 
@@ -87,7 +85,5 @@ test:
 #
 production:
   <<: *default
-  host: db
-  port: 5432
   username: daniel
   password: mudar123
