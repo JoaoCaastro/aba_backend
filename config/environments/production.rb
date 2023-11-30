@@ -85,5 +85,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Permitir back4app host
-  config.hosts << "railsapi1-jt6xsoyo.b4a.run"
+  config.hosts << "*"
 end
