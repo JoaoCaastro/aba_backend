@@ -22,12 +22,25 @@ class ParentsController < ApplicationController
   # POST /parents
   def create
     @client = Client.find(params[:client_id])
-    @parent = @client.parents.build(parent_params)
+    parents_params = params.require(:parents).map { |p| p.permit(:parent_name, :cpf, :degree_of_kinship, :email, :telephone) }
   
-    if @parent.save
-      render json: @parent, status: :created
+    created_parents = []
+    failed_parents = []
+  
+    parents_params.each do |parent_params|
+      parent = @client.parents.build(parent_params)
+  
+      if parent.save
+        created_parents << parent
+      else
+        failed_parents << { parent: parent_params, errors: parent.errors.full_messages }
+      end
+    end
+  
+    if failed_parents.empty?
+      render json: created_parents, status: :created
     else
-      render json: @parent.errors, status: :unprocessable_entity
+      render json: { failed_parents: failed_parents }, status: :unprocessable_entity
     end
   end
 
